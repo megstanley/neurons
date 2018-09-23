@@ -22,7 +22,9 @@ def low_baseline(raw_data, threshold):
     return new_data, deletedcells[0]
 
 if __name__ == "__main__":
-    '''bits and pieces for testing the functions'''
+    '''bits and pieces for testing the functions
+    TO DO: clean this up and put in testing functions'''
+
     data = np.load('/Users/Megan/data_analysis/Aug02_2018_B3/B3_TS/Extracted/rg_B3_TS_ZP_1.npz')
     new_data = []
     new_data, deletedcells = low_baseline(data['data'],150)
