@@ -1,4 +1,5 @@
-'''Initial pass of setting up a processing and analysis pipeline'''
+'''Initial pass of setting up a processing and analysis pipeline.
+This is incomplete.'''
 
 import numpy as np
 import matplotlib.pyplot as plt
