@@ -1,15 +1,10 @@
 '''functions for some initial data cleaning to remove artifacts that have
-been identified:
-1. low_baseline -- if the lowest value in a measurement is below a threshold
-    (typically 200) then the identified neuron is likely an artifact rather
-    than a true neuron. It has possibly been found by mistake on the edge of
-    image, and moves out of frame due to drifting, or is an inactive neuron with
-    a background fluorescence'''
+been identified'''
 import matplotlib.pyplot as plt
 import numpy as np
 
 def low_baseline(raw_data, threshold):
-
+    '''removes time-series with low baselines, as these are artifacts'''
     minima = np.amin(raw_data, axis = 0)
     times, cells = raw_data.shape
     threshold_pass = [i>threshold for i in minima]
@@ -20,6 +15,12 @@ def low_baseline(raw_data, threshold):
     deletedcells = np.nonzero(np.invert(threshold_pass))
 
     return new_data, deletedcells[0]
+
+def remove_edges(data, margin):
+    '''chops off time-series corresponding to points on the extreme edges,
+    as these are artifacts.'''
+    coords = data['xy']
+    mask = [coords[:,0]]
 
 if __name__ == "__main__":
     '''bits and pieces for testing the functions
