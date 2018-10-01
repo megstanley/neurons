@@ -7,7 +7,7 @@ data_root_path = '/Users/Megan/data_analysis/Aug02_2018_B3/'
 
 def find_low_baseline(raw_data, threshold):
     '''find time-series with low baselines, as these are artifacts'''
-    minima = np.amin(raw_data, axis = 0)
+    minima = np.amin(raw_data['data'], axis = 0)
     threshold_pass = [i>threshold for i in minima]
 
     #print(str(threshold_pass.count(True))+ ' out of ' + str(cells)+ ' time series above threshold.')
@@ -38,22 +38,18 @@ def test_find_edges():
     newdata['data'] = data['data'][:,mask[0]]
     print(newdata['xy'].shape)
     filepath = data_root_path + 'B3_TS/rg_B3_TS_ZP_20_removed_edges15.npz'
-    np.savez(filepath, newdata['xy'])
+    np.savez(filepath, newdata)
+
+def test_low_baseline():
+    newdata = dict({'data':[], 'xy':[]})
+    data = np.load('/Users/Megan/data_analysis/Aug02_2018_B3/B3_TS/Extracted/rg_B3_TS_ZP_1.npz')
+    mask = find_low_baseline(data['data'], 200)
+    newdata['xy'] = data['xy'][mask,:]
+    newdata['data'] = data['data'][:,mask]
+    filepath = data_root_path + 'B3_TS/rg_B3_TS_ZP_1_removed_baseline.npz'
+    np.savez(filepath, newdata)
+
 
 if __name__ == "__main__":
-    test_find_edges()
-
-    # data = np.load('/Users/Megan/data_analysis/Aug02_2018_B3/B3_TS/Extracted/rg_B3_TS_ZP_1.npz')
-    # new_data = []
-    # new_data, deletedcells = low_baseline(data['data'],150)
-    # (times, cells) = new_data.shape
-    # print(deletedcells)
-    # timepoints = range(times)
-    # fig, ax = plt.subplots(20, sharex='col', figsize = (100,5))
-    # for i in range(20):
-    #     ax[i].plot(timepoints, data['data'][:,i])
-    # fig.subplots_adjust(hspace=0)
-    #
-    # for axis in ax:
-    #     axis.label_outer()
-    # plt.show()
+    #test_find_edges()
+    test_low_baseline()
