@@ -14,4 +14,20 @@ def threed_points_plot(data):
 
     plt.show()
 
+def multi_plot(data):
+
+
+plt.subplot(2, 1, 1)
+plt.plot(x1, y1, 'o-')
+plt.title('A tale of 2 subplots')
+plt.ylabel('Damped oscillation')
+
+plt.subplot(2, 1, 2)
+plt.plot(x2, y2, '.-')
+plt.xlabel('time (s)')
+plt.ylabel('Undamped')
+
+plt.show()
+
+
 if __name__ == '__main__':
