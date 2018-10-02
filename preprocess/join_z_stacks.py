@@ -8,13 +8,13 @@ sys.path.insert(0, os.path.abspath('..'))
 import numpy as np
 import glob
 import matplotlib.pyplot as plt
-import find_redundancy as fr
+import preprocess.find_redundancy as fr
 #from neurons.general_functions.plotting_functions import threed_points_plot
 
 data_root_path = '/Users/Megan/data_analysis/Aug02_2018_B3/'
 
 def z_coordinate(file):
-    '''internal file sorting and z coordinate returning function'''
+    '''file sorting and z coordinate returning function'''
     i = file.find('ZP_') + 3
     j = file.find('.npz')
     z_coord = int(file[i:j]) * 4 #multiply by 4 microns

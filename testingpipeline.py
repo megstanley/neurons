@@ -8,7 +8,7 @@ import glob
 
 directory = '/Users/Megan/data_analysis/Aug02_2018_B3/'
 
-class test_pipeline(object):
+class test_cleaning_pipeline(object):
 
     '''Process all the files in a folder:
     1. Load the file
@@ -21,39 +21,39 @@ class test_pipeline(object):
         self.file_list = glob.glob(directory+ '*TS/Extracted/*' + flag + '*.npz')
         self.current_file = None
 
-    def load_file(self, file_number):
-        '''load the file at file_number from file_list'''
-        self.current_file = file_number
-        self.filename = self.file_list[file_number]
+    def load_file(self, filename):
+        '''load the file'''
+        self.filename = filename
         self.data = np.load(self.filename)
 
     def save_file(self, outputpath):
-        '''save the current file to another folder'''
-
+        '''save the cleaned data to another folder'''
+        np.savez(outputpath, self.cleandata)
 
     def run_cleaning(self, margin, threshold):
-        '''this is currently incorrect'''
+        '''find edge and low baseline time-series'''
+        self.total_baseline_mask = dclean.find_low_baseline(self.data, threshold)
+        self.total_edges_mask = dclean.find_edges(self.data, margin)
+        self.cleandata = dict({'data':[], 'xy':[]})
+        self.cleandata['xy'] = self.data['xy'][self.total_edges_mask[0],:]
+        self.cleandata['data'] = self.data['data'][:,self.total_edges_mask[0]]
 
-        i = 1
-        for file in self.file_list:
-            self.load_file(i)
-            self.baseline_mask = dclean.find_low_baseline(self.data, threshold)
-            self.edges_mask = dclean.find_edges(self.data, margin)
-            self.newdata = dict({'data':[], 'xy':[]})
-            self.newdata['xy'] = self.data['xy'][self.edges_mask[0],:]
-            self.newdata['data'] = self.data['data'][:,self.edges_mask[0]]
-            # self.newdata['xy'] = self.newdata['xy'][self.baseline_mask,:]
-            # self.newdata['data'] = self.newdata['data'][:,self.baseline_mask]
-
-            i += 1
-
-
+        #need to recalculate the baseline mask now the edges have been removed
+        self.update_baseline_mask = dclean.find_low_baseline(self.cleandata, threshold)
+        self.cleandata['xy'] = self.cleandata['xy'][self.update_baseline_mask,:]
+        self.cleandata['data'] = self.cleandata['data'][:,self.update_baseline_mask]
 
 def main():
-    tp = test_pipeline(directory)
+    tp = test_cleaning_pipeline(directory)
 
-    tp.run_cleaning(10, 200)
-
+    for file in tp.file_list:
+        #file = tp.file_list[0]
+        tp.load_file(file)
+        tp.run_cleaning(10, 200)
+        ident = tp.filename.find('/Extracted/')
+        ind_name = tp.filename[ident+11:]
+        outputpath = outputpath = directory + 'B3_TS/Cleaned/' + ind_name
+        tp.save_file(outputpath)
 
 
 if __name__ == "__main__":
