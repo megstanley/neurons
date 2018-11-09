@@ -14,3 +14,6 @@ time-series belonging to the same cell must be found. Appropriate averaging or d
 
 ### analysis 
 Here, following first the proposed analysis of calcium signals from **Nature Protocols 6:1 2011**, in *deltaF.py*. Once clean calcium signals are identified and isolated, we can start to look for clusters of related cells on the basis of the timing and characteristics of their time-series, and see if we can spot anything interesting. 
+
+
+Note: this work had been put on the backburner for the moment. Possibly best to look at the Granger causality using the connectivipy package. 
